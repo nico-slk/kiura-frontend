@@ -9,7 +9,7 @@ export const getUsers = async () => {
 };
 
 export const createUser = async (body) => {
-  const fetchData = await fetch(HOST, {
+  const fetchData = await fetch(HOST + '/user', {
     method: 'post',
     body: JSON.stringify(body)
   });

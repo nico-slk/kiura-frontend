@@ -1,5 +1,6 @@
 import { useReducer } from 'react';
 import { login } from '../../services/LoginService';
+import { createUser } from '../../services/UserServices';
 import constants from '../constants';
 import LoginContext from './LoginContext';
 import LoginReducer from './LoginReducer';
@@ -13,21 +14,27 @@ const LoginState = ({ children }) => {
     }
   };
 
-  const { LOGIN_USER } = constants;
+  const { LOGIN_USER, CREATE_USER } = constants;
 
   const [state, dispatch] = useReducer(LoginReducer, initial_state);
 
   const loginUser = (credentials) => {
     login(credentials).then(res => {
       dispatch({ type: LOGIN_USER, payload: res.usersList });
-      console.log(state);
+    });
+  };
+
+  const RegisterUser = (credentials) => {
+    createUser(credentials).then(res => {
+      dispatch({ type: CREATE_USER, payload: res.usersList });
     });
   };
 
   return (
     <LoginContext.Provider value={{
       loggedUser: state.loggedUser,
-      loginUser
+      loginUser,
+      RegisterUser
     }} >
       {children}
     </LoginContext.Provider>

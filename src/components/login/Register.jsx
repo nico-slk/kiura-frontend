@@ -1,10 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import LoginContext from '../../context/login/LoginContext';
+import UbicationContext from '../../context/ubication/UbicationContext';
 
 export const Register = () => {
   const [checked, setChecked] = useState(false);
-  const [ubication, setUbication] = useState({});
   const [user, setUser] = useState({});
+
+  const { RegisterUser } = useContext(LoginContext);
+  const { ubicationState, getUbication, createNewUbication } = useContext(UbicationContext);
 
   const handleChecked = () => {
     setChecked(!checked);
@@ -18,9 +22,16 @@ export const Register = () => {
   };
 
   const handleClick = () => {
-    console.log(user.password);
-    console.log(user.re_password);
     if (user.password === user.re_password) {
+
+      getUbication(user.city);
+      if (!ubicationState.ubication.city) {
+        createNewUbication({
+          city: user.city,
+          region: user.region,
+          country: user.country
+        });
+      }
 
       const userObj = {
         name: user.name,
@@ -31,13 +42,9 @@ export const Register = () => {
         avatar_img: user.avatar_img | 'https://i.ibb.co/x7qSSq6/avatar-icon.png',
         identity_img: user.identity_img | 'https://i.ibb.co/RQ2BxJH/istockphoto-612650934-1024x1024.jpg'
       };
-      setUbication({
-        city: user.city,
-        region: user.region,
-        country: user.country
-      });
       setUser(userObj);
 
+      RegisterUser(user);
 
     } else {
       alert('Password should be the same');
